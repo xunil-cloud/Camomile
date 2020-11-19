@@ -217,6 +217,7 @@ file(GLOB CamomileBinaryDataSources
     ${CMAKE_CURRENT_SOURCE_DIR}/Resources/Images/flower_center.png)
 
 juce_add_binary_data(CamomileBinaryData SOURCES ${CamomileBinaryDataSources})
+set_target_properties(CamomileBinaryData PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(Camomile PRIVATE
     libpdstatic
@@ -235,5 +236,7 @@ message(STATUS ${libpdstatic_linked_libraries})
 
 add_executable(lv2_file_generator ${CMAKE_CURRENT_SOURCE_DIR}/LV2/lv2_file_generator/main.c)
 target_link_libraries(lv2_file_generator ${CMAKE_DL_LIBS})
-set_target_properties(lv2_file_generator PROPERTIES CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CAMOMILE_PLUGINS_LOCATION})
-set_target_properties(CamomileBinaryData PROPERTIES POSITION_INDEPENDENT_CODE ON)
+foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
+		  string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
+			set_target_properties(lv2_file_generator PROPERTIES RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CAMOMILE_PLUGINS_LOCATION})
+endforeach(OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES)
